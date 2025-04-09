@@ -8,8 +8,9 @@ namespace HRM.Persistance
     {
         public static IServiceCollection AddPersistance(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<HRMDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContextPool<HRMDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")),
+                1024);
             return services;
         }
     }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HRM.Persistance.Migrations
 {
     [DbContext(typeof(HRMDbContext))]
-    [Migration("20250409071402_initialDb")]
-    partial class initialDb
+    [Migration("20250409145857_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,11 +33,34 @@ namespace HRM.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("6cfa24f9-bdea-4f69-9282-fc5d17eda487"),
+                            Name = "HR"
+                        },
+                        new
+                        {
+                            Id = new Guid("5098fb31-448e-4fc8-bba1-74752324d5a7"),
+                            Name = "Software Development"
+                        },
+                        new
+                        {
+                            Id = new Guid("e20cfeef-74b7-47b9-b47d-84fa07c85caa"),
+                            Name = "Finance"
+                        },
+                        new
+                        {
+                            Id = new Guid("f2a0b1c3-4d5e-4c8b-9f6d-7a1e2f3c4b5a"),
+                            Name = "Accountant"
+                        });
                 });
 
             modelBuilder.Entity("HRM.Domain.Entities.Employee", b =>
@@ -54,13 +77,20 @@ namespace HRM.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("SalaryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Employees");
+                    b.HasIndex("SalaryId")
+                        .IsUnique();
+
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("HRM.Domain.Entities.Project", b =>
@@ -71,11 +101,12 @@ namespace HRM.Persistance.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("HRM.Domain.Entities.ProjectEmployee", b =>
@@ -86,11 +117,14 @@ namespace HRM.Persistance.Migrations
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("bit");
+
                     b.HasKey("EmployeeId", "ProjectId");
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectEmployees");
+                    b.ToTable("ProjectEmployees", (string)null);
                 });
 
             modelBuilder.Entity("HRM.Domain.Entities.Salary", b =>
@@ -102,25 +136,28 @@ namespace HRM.Persistance.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("Salaries");
+                    b.ToTable("Salaries", (string)null);
                 });
 
             modelBuilder.Entity("HRM.Domain.Entities.Employee", b =>
                 {
                     b.HasOne("HRM.Domain.Entities.Department", "Department")
-                        .WithMany()
+                        .WithMany("Employees")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("HRM.Domain.Entities.Salary", "Salary")
+                        .WithOne("Employee")
+                        .HasForeignKey("HRM.Domain.Entities.Employee", "SalaryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Department");
+
+                    b.Navigation("Salary");
                 });
 
             modelBuilder.Entity("HRM.Domain.Entities.ProjectEmployee", b =>
@@ -142,15 +179,9 @@ namespace HRM.Persistance.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("HRM.Domain.Entities.Salary", b =>
+            modelBuilder.Entity("HRM.Domain.Entities.Department", b =>
                 {
-                    b.HasOne("HRM.Domain.Entities.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
+                    b.Navigation("Employees");
                 });
 
             modelBuilder.Entity("HRM.Domain.Entities.Employee", b =>
@@ -161,6 +192,12 @@ namespace HRM.Persistance.Migrations
             modelBuilder.Entity("HRM.Domain.Entities.Project", b =>
                 {
                     b.Navigation("ProjectEmployees");
+                });
+
+            modelBuilder.Entity("HRM.Domain.Entities.Salary", b =>
+                {
+                    b.Navigation("Employee")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
