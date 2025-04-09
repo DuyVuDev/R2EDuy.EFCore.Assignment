@@ -21,18 +21,25 @@ namespace HRM.Persistance
             modelBuilder.Entity<Employee>()
                 .HasOne<Salary>(e => e.Salary)
                 .WithOne(s => s.Employee)
-                .HasForeignKey<Employee>(e => e.SalaryId);
+                .HasForeignKey<Employee>(e => e.SalaryId); ;
 
             modelBuilder.Entity<Employee>()
                 .HasOne<Department>(e => e.Department)
                 .WithMany(d => d.Employees)
-                .HasForeignKey(e => e.DepartmentId);
+                .HasForeignKey(e => e.DepartmentId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder
                 .Entity<ProjectEmployee>()
-                .HasKey(pe => new { pe.EmployeeId, pe.ProjectId });
+                .HasOne<Employee>(pe => pe.Employee)
+                .WithMany(e => e.ProjectEmployees)
+                .HasForeignKey(pe => pe.EmployeeId);
 
-
+            modelBuilder
+                .Entity<ProjectEmployee>()
+                .HasOne<Project>(pe => pe.Project)
+                .WithMany(p => p.ProjectEmployees)
+                .HasForeignKey(pe => pe.ProjectId);
         }
     }
 }
