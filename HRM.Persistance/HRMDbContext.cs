@@ -4,10 +4,8 @@ using System.Reflection;
 
 namespace HRM.Persistance
 {
-    public class HRMDbContext : DbContext
+    public class HRMDbContext(DbContextOptions<HRMDbContext> options) : DbContext(options)
     {
-        public HRMDbContext(DbContextOptions<HRMDbContext> options) : base(options)
-        { }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Project> Projects { get; set; }
@@ -21,7 +19,7 @@ namespace HRM.Persistance
             modelBuilder.Entity<Employee>()
                 .HasOne<Salary>(e => e.Salary)
                 .WithOne(s => s.Employee)
-                .HasForeignKey<Employee>(e => e.SalaryId); ;
+                .HasForeignKey<Salary>(s => s.EmployeeId);
 
             modelBuilder.Entity<Employee>()
                 .HasOne<Department>(e => e.Department)

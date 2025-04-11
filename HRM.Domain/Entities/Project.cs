@@ -4,7 +4,7 @@
     {
         public Guid Id { get; set; }
         public required string Name { get; set; }
-        public IList<ProjectEmployee> ProjectEmployees { get; set; }
+        public IList<ProjectEmployee>? ProjectEmployees { get; set; }
 
     }
 }

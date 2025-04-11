@@ -77,15 +77,9 @@ namespace HRM.Persistance.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid>("SalaryId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
-
-                    b.HasIndex("SalaryId")
-                        .IsUnique();
 
                     b.ToTable("Employees", (string)null);
                 });
@@ -133,7 +127,13 @@ namespace HRM.Persistance.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId")
+                        .IsUnique();
 
                     b.ToTable("Salaries", (string)null);
                 });
@@ -146,15 +146,7 @@ namespace HRM.Persistance.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HRM.Domain.Entities.Salary", "Salary")
-                        .WithOne("Employee")
-                        .HasForeignKey("HRM.Domain.Entities.Employee", "SalaryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Department");
-
-                    b.Navigation("Salary");
                 });
 
             modelBuilder.Entity("HRM.Domain.Entities.ProjectEmployee", b =>
@@ -176,6 +168,17 @@ namespace HRM.Persistance.Migrations
                     b.Navigation("Project");
                 });
 
+            modelBuilder.Entity("HRM.Domain.Entities.Salary", b =>
+                {
+                    b.HasOne("HRM.Domain.Entities.Employee", "Employee")
+                        .WithOne("Salary")
+                        .HasForeignKey("HRM.Domain.Entities.Salary", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("HRM.Domain.Entities.Department", b =>
                 {
                     b.Navigation("Employees");
@@ -184,17 +187,13 @@ namespace HRM.Persistance.Migrations
             modelBuilder.Entity("HRM.Domain.Entities.Employee", b =>
                 {
                     b.Navigation("ProjectEmployees");
+
+                    b.Navigation("Salary");
                 });
 
             modelBuilder.Entity("HRM.Domain.Entities.Project", b =>
                 {
                     b.Navigation("ProjectEmployees");
-                });
-
-            modelBuilder.Entity("HRM.Domain.Entities.Salary", b =>
-                {
-                    b.Navigation("Employee")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

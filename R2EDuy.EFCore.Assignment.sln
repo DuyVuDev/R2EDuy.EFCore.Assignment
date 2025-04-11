@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRM.Infrastructure", "HRM.Infrastructure\HRM.Infrastructure.csproj", "{5D7A5C7B-665E-4DB5-BCE1-5041F4CFC1EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{43716AEB-3137-41A2-A9E2-7233D509F431}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43716AEB-3137-41A2-A9E2-7233D509F431}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43716AEB-3137-41A2-A9E2-7233D509F431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D7A5C7B-665E-4DB5-BCE1-5041F4CFC1EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D7A5C7B-665E-4DB5-BCE1-5041F4CFC1EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D7A5C7B-665E-4DB5-BCE1-5041F4CFC1EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D7A5C7B-665E-4DB5-BCE1-5041F4CFC1EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
