@@ -14,7 +14,7 @@ namespace HRM.API.Controllers
             _projectEmployeeService = projectEmployeeService;
         }
 
-        [HttpGet("/{projectId}/{employeeId}")]
+        [HttpGet("{projectId}/{employeeId}")]
         public async Task<IActionResult> GetProjectEmployeesByKeys(Guid projectId, Guid employeeId)
         {
             try
